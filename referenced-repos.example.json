@@ -1,0 +1,8 @@
+{
+  "repos": {
+    "MyProject": {
+      "path": "/path/to/your/repo",
+      "addedAt": "2025-01-01"
+    }
+  }
+}

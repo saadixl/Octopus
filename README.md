@@ -2,6 +2,13 @@
 
 Cursor Agent skills you can reuse across projects. Each skill is a `SKILL.md` file that tells the AI when and how to perform a task.
 
+**Works with:**
+
+- ✅ Cursor
+- ✅ Claude Code
+
+In Cursor, skills are picked up automatically. In Claude Code, tell it once (e.g. “use the skills in this repo” or point it at the skill files); it will follow the same instructions.
+
 ## Repo structure
 
 ```

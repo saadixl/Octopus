@@ -91,7 +91,7 @@ Octopus can keep **project-specific notes** (generated once, reused later) under
 
 ### Git / privacy
 
-- `memory/project/*` is **gitignored** so summaries stay **local** and aren’t committed.
+- `memory/project/**` is **gitignored** (except `memory/project/.gitkeep`) so per-project summaries stay **local** and aren’t committed.
 - `memory/project/.gitkeep` is kept so the folder exists in the repo.
 
 ## Optional: control response length

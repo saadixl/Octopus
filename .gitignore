@@ -9,5 +9,5 @@ memory/assistant-preference.json
 memory/last-working-repos.json
 
 # Project summaries (local, not committed)
-memory/project/*
+memory/project/**
 !memory/project/.gitkeep

@@ -37,6 +37,7 @@ Octopus/
 | Skill | What it does |
 |-------|----------------|
 | **use-octopus** | Register a project repo by name. You say the project name; the agent finds it and stores the path in `memory/referenced-repos.json` (gitignored). No need to copy skills into that repo. |
+| **map-project** | Create (or reuse) a saved project summary under `memory/project/<ProjectName>/summary.md` so the agent doesn’t re-summarize the repo every time. |
 | **commit-push** | Run `npm run build`, then `git add`, `git commit` (message from changes), and `git push`. |
 | **start-react** | Start the React dev server (`npm start`), open the app in Safari, and open GitHub (Desktop or repo in browser). |
 | **start-docker-compose** | Start the Docker Compose stack (`docker compose up -d` or foreground). |
@@ -68,6 +69,25 @@ Say what you want and **include the repo name**:
 | “Deploy **MyProject**” | firebase-build-deploy (in that repo’s path) |
 
 Registered repos and their paths are in **`memory/referenced-repos.json`** (gitignored).
+
+## Project memory: `memory/project/`
+
+Octopus can keep **project-specific notes** (generated once, reused later) under:
+
+- `memory/project/<ProjectName>/summary.md`
+
+### How it’s used
+
+- **First time** you “use octopus with <ProjectName>” (or you run “map project <ProjectName>”):
+  - Octopus scans the repo (lightweight: README, package.json, key folders)
+  - Writes a reusable summary to `memory/project/<ProjectName>/summary.md`
+- **Next time**:
+  - Octopus reads the existing summary instead of re-summarizing the repo
+
+### Git / privacy
+
+- `memory/project/*` is **gitignored** so summaries stay **local** and aren’t committed.
+- `memory/project/.gitkeep` is kept so the folder exists in the repo.
 
 ## Optional: control response length
 

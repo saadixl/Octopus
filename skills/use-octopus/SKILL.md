@@ -75,12 +75,21 @@ Tell them:
 - Path stored: **&lt;path&gt;**.
 - Short reminder: “You can keep using Cursor from this Octopus repo. When you ask to commit, start React, or deploy, tell me the repo name and I’ll run the steps in that repo using the reference here.”
 
+### 5. Auto-map the project (one-time)
+
+After registration (or when the repo name already exists), ensure the project has a saved summary:
+
+- Check for: `memory/project/<RepoName>/summary.md`
+- If it exists: read it and give a short recap (1–3 bullets), then stop.
+- If it does not exist: run the **map-project** workflow to generate and save it, then tell the user where it was saved.
+
 ## Summary
 
 1. User says “use skills” → ask for **repo name**.
 2. User gives name → **find** repo (reference file, then sibling/common paths; else ask for path).
 3. **Write** `memory/referenced-repos.json` with `repos.<name>.path` and `addedAt`.
 4. **Confirm** registration and remind how to use it (e.g. “commit and push &lt;name&gt;”, “start React for &lt;name&gt;”).
+5. If no saved summary exists, **generate** `memory/project/<name>/summary.md` (map-project).
 
 ## Notes
 

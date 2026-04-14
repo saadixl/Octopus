@@ -7,3 +7,7 @@ memory/assistant-preference.json
 
 # Last active/recent repos (local, not committed). Copy from memory/last-working-repos.example.json to get started.
 memory/last-working-repos.json
+
+# Project summaries (local, not committed)
+memory/project/*
+!memory/project/.gitkeep

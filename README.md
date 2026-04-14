@@ -27,6 +27,7 @@ Octopus/
 │   └── firebase-build-deploy/
 │       └── SKILL.md
 └── memory/
+    ├── assistant-preferences.json      # Optional: response verbosity/preferences for the agent
     ├── referenced-repos.example.json  # Example format; copy to referenced-repos.json to use
     └── referenced-repos.json          # Your registered repos (gitignored, not committed)
 ```
@@ -67,6 +68,18 @@ Say what you want and **include the repo name**:
 | “Deploy **MyProject**” | firebase-build-deploy (in that repo’s path) |
 
 Registered repos and their paths are in **`memory/referenced-repos.json`** (gitignored).
+
+## Optional: control response length
+
+You can store your preference in `memory/assistant-preferences.json` (gitignored is optional; it’s safe to commit if it contains no secrets).
+
+- **Short responses**: set `"verbosity": "short"`
+- **Normal**: set `"verbosity": "normal"`
+- **Detailed**: set `"verbosity": "detailed"`
+
+To make the agent apply it, include it in your prompt, e.g.:
+
+- “Follow `memory/assistant-preferences.json`. Start React for MyProject.”
 
 ## Alternative: copy or symlink skills into a project
 

@@ -1,2 +1,5 @@
 # Repo references (paths stay local, not committed). Copy from memory/referenced-repos.example.json to get started.
 memory/referenced-repos.json
+
+# Assistant preferences (local, not committed). Copy from memory/assistant-preferences.example.json to get started.
+memory/assistant-preferences.json

@@ -1,0 +1,14 @@
+---
+description: Always read Octopus memory files for preferences/paths
+alwaysApply: true
+---
+
+# Memory files (Octopus)
+
+At the start of every request, read these files if they exist and follow them:
+
+- `memory/assistant-preferences.json` (response verbosity/style preferences)
+- `memory/referenced-repos.json` (project name → path mapping for running skills against other repos)
+
+If there is a conflict between the memory files and the user’s latest request, the user’s latest request wins.
+

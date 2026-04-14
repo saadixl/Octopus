@@ -15,25 +15,27 @@ In Cursor, skills are picked up automatically. In Claude Code, tell it once (e.g
 Octopus/
 ├── README.md
 ├── .gitignore
-├── referenced-repos.example.json   # Example format; copy to referenced-repos.json to use
-├── referenced-repos.json          # Your registered repos (gitignored, not committed)
-├── use-skills/
-│   └── SKILL.md
-├── commit-push/
-│   └── SKILL.md
-├── start-react/
-│   └── SKILL.md
-├── start-docker-compose/
-│   └── SKILL.md
-└── firebase-build-deploy/
-    └── SKILL.md
+├── skills/
+│   ├── use-octopus/
+│   │   └── SKILL.md
+│   ├── commit-push/
+│   │   └── SKILL.md
+│   ├── start-react/
+│   │   └── SKILL.md
+│   ├── start-docker-compose/
+│   │   └── SKILL.md
+│   └── firebase-build-deploy/
+│       └── SKILL.md
+└── memory/
+    ├── referenced-repos.example.json  # Example format; copy to referenced-repos.json to use
+    └── referenced-repos.json          # Your registered repos (gitignored, not committed)
 ```
 
 ## Skills
 
 | Skill | What it does |
 |-------|----------------|
-| **use-skills** | Register a repo by name. You say the repo name; the agent finds it and stores the path in `referenced-repos.json` (gitignored). No need to copy skills into that repo. |
+| **use-octopus** | Register a project repo by name. You say the project name; the agent finds it and stores the path in `memory/referenced-repos.json` (gitignored). No need to copy skills into that repo. |
 | **commit-push** | Run `npm run build`, then `git add`, `git commit` (message from changes), and `git push`. |
 | **start-react** | Start the React dev server (`npm start`), open the app in Safari, and open GitHub (Desktop or repo in browser). |
 | **start-docker-compose** | Start the Docker Compose stack (`docker compose up -d` or foreground). |
@@ -45,12 +47,12 @@ Octopus/
 
 ### 1. Register a repo (one-time per repo)
 
-- Say: **“use skills”** (or “use skill” / “register repo”).
+- Say: **“use octopus”** (or “use skills” / “use skill” / “register repo”).
 - When asked, give the **repo name** (e.g. your project folder name).
-- The agent finds it and adds it to **`referenced-repos.json`** at the root of Octopus. That file is in `.gitignore`, so your paths are never committed.
+- The agent finds it and adds it to **`memory/referenced-repos.json`**. That file is in `.gitignore`, so your paths are never committed.
 
-If you don’t have `referenced-repos.json` yet, copy from the example:  
-`cp referenced-repos.example.json referenced-repos.json`  
+If you don’t have `memory/referenced-repos.json` yet, copy from the example:  
+`cp memory/referenced-repos.example.json memory/referenced-repos.json`  
 (or the agent will create it when you register your first repo).
 
 ### 2. Run skills by repo name
@@ -64,7 +66,7 @@ Say what you want and **include the repo name**:
 | “Start Docker Compose for **MyProject**” | start-docker-compose (in that repo’s path) |
 | “Deploy **MyProject**” | firebase-build-deploy (in that repo’s path) |
 
-Registered repos and their paths are in **`referenced-repos.json`** at the root of this repo (gitignored).
+Registered repos and their paths are in **`memory/referenced-repos.json`** (gitignored).
 
 ## Alternative: copy or symlink skills into a project
 
@@ -76,23 +78,23 @@ From your project root (replace with your path to Octopus):
 
 ```bash
 mkdir -p .cursor/skills
-cp -r /path/to/Octopus/commit-push .cursor/skills/
-cp -r /path/to/Octopus/start-react .cursor/skills/
-cp -r /path/to/Octopus/start-docker-compose .cursor/skills/
-cp -r /path/to/Octopus/firebase-build-deploy .cursor/skills/
+cp -r /path/to/Octopus/skills/commit-push .cursor/skills/
+cp -r /path/to/Octopus/skills/start-react .cursor/skills/
+cp -r /path/to/Octopus/skills/start-docker-compose .cursor/skills/
+cp -r /path/to/Octopus/skills/firebase-build-deploy .cursor/skills/
 ```
 
 ### Symlink (updates in Octopus apply everywhere)
 
 ```bash
 mkdir -p .cursor/skills
-ln -s /path/to/Octopus/commit-push .cursor/skills/commit-push
-ln -s /path/to/Octopus/start-react .cursor/skills/start-react
-ln -s /path/to/Octopus/start-docker-compose .cursor/skills/start-docker-compose
-ln -s /path/to/Octopus/firebase-build-deploy .cursor/skills/firebase-build-deploy
+ln -s /path/to/Octopus/skills/commit-push .cursor/skills/commit-push
+ln -s /path/to/Octopus/skills/start-react .cursor/skills/start-react
+ln -s /path/to/Octopus/skills/start-docker-compose .cursor/skills/start-docker-compose
+ln -s /path/to/Octopus/skills/firebase-build-deploy .cursor/skills/firebase-build-deploy
 ```
 
-With copy/symlink, you run skills in the **current** workspace (that project). The “target repo” step in each skill (and `referenced-repos.json`) is only used when you work from the Octopus repo and pass a repo name.
+With copy/symlink, you run skills in the **current** workspace (that project). The “target repo” step in each skill (and `memory/referenced-repos.json`) is only used when you work from the Octopus repo and pass a repo name.
 
 ## Customizing
 

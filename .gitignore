@@ -1,2 +1,2 @@
-# Repo references (paths stay local, not committed). Copy from referenced-repos.example.json to get started.
-referenced-repos.json
+# Repo references (paths stay local, not committed). Copy from memory/referenced-repos.example.json to get started.
+memory/referenced-repos.json

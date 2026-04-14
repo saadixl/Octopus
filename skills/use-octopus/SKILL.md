@@ -1,15 +1,15 @@
 ---
-name: use-skills
-description: Register a repo so you can use skills from this Octopus repo without copying them. When the user says use skills, use skill, or register repo, ask for the repo name, find it on the machine, and store a reference with path and details.
+name: use-octopus
+description: Register a repo so you can use skills from this Octopus repo without copying them. When the user says use octopus, use skills, use skill, or register repo, ask for the repo name, find it on the machine, and store a reference with path and details.
 ---
 
-# Use Skills (register a repo)
+# Use Octopus (register a repo)
 
 Use this when you want to **work from the Octopus repo** but run skill workflows (commit-push, start-react, deploy) in another repo. No need to copy skills into each project—we keep a reference here and run commands in the target repo when needed.
 
 ## When to Use
 
-- User says **use skills**, **use skill**, or **register repo**
+- User says **use octopus**, **use skills**, **use skill**, or **register repo**
 - User wants to add a repo so they can use skills from this repo against it
 - User wants to “point” this skills repo at a project by name
 
@@ -19,7 +19,7 @@ Use this when you want to **work from the Octopus repo** but run skill workflows
 
 Reply with something like:
 
-- “Which repo do you want to use skills with? Give me the repo name.”
+- “Which project do you want to use Octopus with? Give me the project name.”
 - Or: “What’s the name of the repo on your machine?”
 
 Do **not** assume the repo name. Wait for the user to answer.
@@ -29,7 +29,7 @@ Do **not** assume the repo name. Wait for the user to answer.
 Once the user gives a name:
 
 1. **Check the reference file first**  
-   Read `referenced-repos.json` in this repo (Octopus). If that file doesn’t exist, create it (same format as `referenced-repos.example.json`). If that repo name is already in the file, confirm and stop (or ask if they want to update the path).
+   Read `memory/referenced-repos.json` in this repo (Octopus). If that file doesn’t exist, create it (same format as `memory/referenced-repos.example.json`). If that repo name is already in the file, confirm and stop (or ask if they want to update the path).
 
 2. **If not in the reference file, search for the repo:**
    - **Sibling of this repo:** List the parent directory of Octopus and look for a folder matching the name (case-insensitive).
@@ -45,7 +45,7 @@ Once the user gives a name:
 
 ### 3. Create or update the reference
 
-- Write to **`referenced-repos.json`** at the **root of Octopus** (same level as this skill’s folder). This file is in `.gitignore`, so paths are never committed. If the file doesn’t exist, create it using the format in `referenced-repos.example.json`.
+- Write to **`memory/referenced-repos.json`** in Octopus. This file is in `.gitignore`, so paths are never committed. If the file doesn’t exist, create it using the format in `memory/referenced-repos.example.json`.
 
 - **Format:**
 
@@ -65,7 +65,7 @@ Once the user gives a name:
   - `path`: absolute path to the repo directory.
   - `addedAt`: today’s date in ISO or YYYY-MM-DD (update when path changes).
 
-- Write the updated JSON back to `referenced-repos.json` (preserve any other repos already in the file).
+- Write the updated JSON back to `memory/referenced-repos.json` (preserve any other repos already in the file).
 
 ### 4. Confirm to the user
 
@@ -79,10 +79,10 @@ Tell them:
 
 1. User says “use skills” → ask for **repo name**.
 2. User gives name → **find** repo (reference file, then sibling/common paths; else ask for path).
-3. **Write** `referenced-repos.json` at Octopus root with `repos.<name>.path` and `addedAt`.
+3. **Write** `memory/referenced-repos.json` with `repos.<name>.path` and `addedAt`.
 4. **Confirm** registration and remind how to use it (e.g. “commit and push &lt;name&gt;”, “start React for &lt;name&gt;”).
 
 ## Notes
 
 - **Always run from this repo (Octopus).** The reference file lives here; commands for the other repo are run by `cd`-ing to the stored path (or running from that path) when the user asks for a skill for that repo.
-- **Other skills (commit-push, start-react, start-docker-compose, firebase-build-deploy):** When the user specifies a repo by name, look up the name in `referenced-repos.json` and run the skill steps in that repo’s path instead of the current workspace.
+- **Other skills (commit-push, start-react, start-docker-compose, firebase-build-deploy):** When the user specifies a repo by name, look up the name in `memory/referenced-repos.json` and run the skill steps in that repo’s path instead of the current workspace.

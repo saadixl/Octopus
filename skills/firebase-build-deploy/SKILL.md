@@ -24,7 +24,7 @@ description: For this project, deploy means deploying to Firebase Hosting. Build
 
 ### 0. Target repo (when using from Octopus)
 
-If the user specified a repo by name , look up that name in **`referenced-repos.json`** in this workspace root. If found, run all following steps from that repo’s path (e.g. `cd <path>` then run commands there). Otherwise use the current workspace.
+If the user specified a repo by name , look up that name in **`memory/referenced-repos.json`** in this workspace root. If found, run all following steps from that repo’s path (e.g. `cd <path>` then run commands there). Otherwise use the current workspace.
 
 ### 1. Build the app
 

@@ -84,6 +84,11 @@ Octopus can keep **project-specific notes** (generated once, reused later) under
 - **Next time**:
   - Octopus reads the existing summary instead of re-summarizing the repo
 
+### Token-saving defaults
+
+- If you omit a repo name (e.g. “start react”), Octopus will default to the **last active repo** from `memory/last-working-repos.json`.
+- Skills will avoid “extra” actions (like opening apps) unless you asked.
+
 ### Git / privacy
 
 - `memory/project/*` is **gitignored** so summaries stay **local** and aren’t committed.

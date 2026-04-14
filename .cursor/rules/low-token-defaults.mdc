@@ -1,0 +1,31 @@
+---
+description: Reduce tokens by default (reuse project summaries, infer target repo, concise responses)
+alwaysApply: true
+---
+
+# Low-token defaults (Octopus)
+
+## Be concise by default
+
+- Keep responses **short** unless the user asks for detail.
+- Prefer bullets; avoid repeating plans, long recaps, or restating file contents.
+
+## Resolve target repo with minimal back-and-forth
+
+When a workflow needs a “target repo”:
+
+- If the user named a repo (e.g. “for Ventory”), use it.
+- Otherwise, default to `memory/last-working-repos.json:lastActive` **without asking**.
+- Only ask if no repo name is provided **and** there is no `lastActive`.
+
+## Reuse saved project knowledge
+
+Before exploring a repo to “understand how it works”, check for:
+
+- `memory/project/<RepoName>/summary.md`
+
+If it exists:
+
+- Read it first and use it as context.
+- Only re-summarize if the user explicitly asks to refresh.
+

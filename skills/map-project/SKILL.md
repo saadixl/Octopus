@@ -90,3 +90,9 @@ Keep it concise, but actionable.
 - Tell the user where it was saved.
 - On subsequent `use-octopus` for this project, the agent should read this file instead of re-summarizing.
 
+## Token-saving guidance
+
+- Keep the summary **short and scannable**.
+- Avoid dumping large file contents.
+- Do not include secrets; for configs, prefer listing **env var names** (not values).
+

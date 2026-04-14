@@ -22,7 +22,7 @@ Reply with something like:
 - “Which project do you want to use Octopus with? Give me the project name.”
 - Or: “What’s the name of the repo on your machine?”
 
-Do **not** assume the repo name. Wait for the user to answer.
+If the user already included a repo name (e.g. “use octopus with Ventory”), do **not** ask again—use that name directly.
 
 ### 2. Find the repo on the machine
 

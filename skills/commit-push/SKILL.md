@@ -16,7 +16,11 @@ description: Commits changes to git and pushes to the remote (GitHub). Use when 
 
 ### 0. Target repo (when using from Octopus)
 
-If the user specified a repo by name, look up that name in **`memory/referenced-repos.json`** in this workspace root. If found, run all following steps from that repo’s path (e.g. `cd <path>` then run commands there). Otherwise use the current workspace.
+Resolve the target repo with minimal back-and-forth:
+
+- If the user specified a repo by name, look it up in **`memory/referenced-repos.json`** and run in that path.
+- If the user did **not** specify a repo, default to `memory/last-working-repos.json:lastActive` if present.
+- Only ask which repo if neither is available.
 
 ### 1. Check and fix ESLint errors first
 

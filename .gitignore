@@ -3,3 +3,7 @@ memory/referenced-repos.json
 
 # Assistant preferences (local, not committed). Copy from memory/assistant-preferences.example.json to get started.
 memory/assistant-preferences.json
+memory/assistant-preference.json
+
+# Last active/recent repos (local, not committed). Copy from memory/last-working-repos.example.json to get started.
+memory/last-working-repos.json

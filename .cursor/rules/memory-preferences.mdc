@@ -9,6 +9,11 @@ At the start of every request, read these files if they exist and follow them:
 
 - `memory/assistant-preferences.json` (response verbosity/style preferences)
 - `memory/referenced-repos.json` (project name → path mapping for running skills against other repos)
+- `memory/last-working-repos.json` (last active + recent repos; use as a default when the user doesn’t specify a repo)
 
 If there is a conflict between the memory files and the user’s latest request, the user’s latest request wins.
+
+Whenever you start working in a repo (or switch repos), update `memory/last-working-repos.json`:
+- Set `lastActive` to that repoName/path with current timestamp
+- Maintain a `recent` list (most-recent first, max 10, unique by path)
 

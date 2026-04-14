@@ -81,6 +81,13 @@ To make the agent apply it, include it in your prompt, e.g.:
 
 - “Follow `memory/assistant-preferences.json`. Start React for MyProject.”
 
+## Optional: remember last active repo
+
+If you want Octopus to default to the repo you worked on last (when you don’t specify a repo name), use:
+
+- `memory/last-working-repos.json` (local; gitignored)
+- `memory/last-working-repos.example.json` (template)
+
 ## Alternative: copy or symlink skills into a project
 
 If you prefer to open Cursor in each project and have skills there, copy or symlink the skill folders into that project’s `.cursor/skills/` directory.

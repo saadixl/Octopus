@@ -1,13 +1,10 @@
-# Repo references (paths stay local, not committed). Copy from memory/referenced-repos.example.json to get started.
-memory/referenced-repos.json
+# Local data — never committed
+local/
 
-# Assistant preferences (local, not committed). Copy from memory/assistant-preferences.example.json to get started.
-memory/assistant-preferences.json
-memory/assistant-preference.json
+# Editor / OS
+.DS_Store
+*.swp
+*~
 
-# Last active/recent repos (local, not committed). Copy from memory/last-working-repos.example.json to get started.
-memory/last-working-repos.json
-
-# Project summaries (local, not committed)
-memory/project/**
-!memory/project/.gitkeep
+# Claude Code local settings
+.claude/settings.local.json

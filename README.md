@@ -1,147 +1,152 @@
 # Octopus
 
-Cursor Agent skills you can reuse across projects. Each skill is a `SKILL.md` file that tells the AI when and how to perform a task.
+Manage all your projects from one repo using AI coding assistants. Open Octopus in **Cursor** or **Claude Code**, and run skills (commit, deploy, start dev server, etc.) against any registered project — without copying config into each one.
 
-**Works with:**
+```
+"commit and push MyApp"
+"deploy Backend"
+"start react for Dashboard"
+```
 
-- ✅ Cursor
-- ✅ Claude Code
+The agent resolves the project path, reads cached context, and runs everything in the right directory.
 
-In Cursor, skills are picked up automatically. In Claude Code, tell it once (e.g. “use the skills in this repo” or point it at the skill files); it will follow the same instructions.
+## Why
+
+- **One hub** — keep your AI assistant rules and skills in one place, use them everywhere.
+- **Token-efficient** — project summaries are cached locally so the agent doesn't re-explore repos every session.
+- **Shareable** — all personal data lives in `local/` (gitignored). The skills and rules are safe to share publicly.
+
+## Quick start
+
+### 1. Clone
+
+```bash
+git clone https://github.com/your-username/Octopus.git
+cd Octopus
+```
+
+### 2. Create your local config
+
+```bash
+mkdir -p local/maps
+cp examples/repos.json local/repos.json
+cp examples/preferences.json local/preferences.json
+```
+
+Edit `local/repos.json` with your actual project paths:
+
+```json
+{
+  "lastActive": "my-app",
+  "projects": {
+    "my-app": {
+      "path": "/Users/you/Code/my-app",
+      "added": "2025-01-01"
+    }
+  }
+}
+```
+
+### 3. Open in your AI editor
+
+**Cursor:** Open this folder. Rules in `.cursor/rules/` and skills in `skills/` are picked up automatically.
+
+**Claude Code:** Open this folder. Instructions in `CLAUDE.md` are picked up automatically. Tell it to read the skills in `skills/` on first use.
+
+### 4. Start using it
+
+```
+"add project MyApp"          → registers a project
+"map project MyApp"          → generates a cached summary
+"commit and push MyApp"      → stages, commits, pushes
+"deploy MyApp"               → builds and deploys
+"start MyApp"                → starts the dev server
+"start docker for MyApp"     → docker compose up
+```
+
+If you skip the project name, Octopus uses the last active project.
 
 ## Repo structure
 
 ```
 Octopus/
-├── README.md
-├── .gitignore
+├── CLAUDE.md                    # Claude Code instructions (auto-loaded)
+├── .cursor/rules/
+│   └── octopus-core.mdc        # Cursor rules (auto-loaded)
 ├── skills/
-│   ├── use-octopus/
-│   │   └── SKILL.md
-│   ├── commit-push/
-│   │   └── SKILL.md
-│   ├── start-react/
-│   │   └── SKILL.md
-│   ├── start-docker-compose/
-│   │   └── SKILL.md
-│   └── firebase-build-deploy/
-│       └── SKILL.md
-└── memory/
-    ├── assistant-preferences.json      # Optional: response verbosity/preferences for the agent
-    ├── referenced-repos.example.json  # Example format; copy to referenced-repos.json to use
-    └── referenced-repos.json          # Your registered repos (gitignored, not committed)
+│   ├── add-project.md          # Register a project
+│   ├── map-project.md          # Cache a project summary
+│   ├── commit-push.md          # Git commit and push
+│   ├── deploy.md               # Build and deploy (Firebase/Vercel/Netlify)
+│   ├── dev-server.md           # Start dev server
+│   └── docker.md               # Docker Compose
+├── examples/
+│   ├── repos.json              # Example project registry
+│   └── preferences.json        # Example preferences
+└── local/                      # ← gitignored, your personal data
+    ├── repos.json              # Your project registry
+    ├── preferences.json        # Your response style preferences
+    └── maps/
+        └── MyProject.md        # Cached project summaries
 ```
 
-## Skills
+## Skills reference
 
-| Skill | What it does |
-|-------|----------------|
-| **use-octopus** | Register a project repo by name. You say the project name; the agent finds it and stores the path in `memory/referenced-repos.json` (gitignored). No need to copy skills into that repo. |
-| **map-project** | Create (or reuse) a saved project summary under `memory/project/<ProjectName>/summary.md` so the agent doesn’t re-summarize the repo every time. |
-| **commit-push** | Run `npm run build`, then `git add`, `git commit` (message from changes), and `git push`. |
-| **start-react** | Start the React dev server (`npm start`), open the app in Safari, and open GitHub (Desktop or repo in browser). |
-| **start-docker-compose** | Start the Docker Compose stack (`docker compose up -d` or foreground). |
-| **firebase-build-deploy** | Run `npm run build` and `firebase deploy` (or `--only hosting`) for Firebase Hosting. |
+| Skill | Trigger phrases | What it does |
+|-------|----------------|--------------|
+| **add-project** | "add project", "register project", "use octopus" | Finds a repo on disk, saves its path, auto-generates a summary |
+| **map-project** | "map project", "summarize project" | Creates a cached summary so the agent has instant context |
+| **commit-push** | "commit", "push", "commit and push" | Builds, stages, commits with auto-generated message, pushes |
+| **deploy** | "deploy", "ship", "publish" | Builds and deploys (auto-detects Firebase/Vercel/Netlify) |
+| **dev-server** | "start", "dev", "run" | Starts the dev server (auto-detects npm start/dev/docker) |
+| **docker** | "docker", "start docker", "start containers" | Starts Docker Compose services |
 
-## Recommended: use skills from this repo (no copy)
+## How token caching works
 
-**Open Cursor in this repo (Octopus).** You stay here; the agent runs commands in your other repos using stored paths.
+When you first register a project, Octopus scans it lightly (README, package.json, folder structure) and writes a summary to `local/maps/<ProjectName>.md`. On every future session, the agent reads this cached file instead of re-exploring the repo — saving significant tokens.
 
-### 1. Register a repo (one-time per repo)
+To refresh a stale summary: `"refresh map for MyApp"`
 
-- Say: **“use octopus”** (or “use skills” / “use skill” / “register repo”).
-- When asked, give the **repo name** (e.g. your project folder name).
-- The agent finds it and adds it to **`memory/referenced-repos.json`**. That file is in `.gitignore`, so your paths are never committed.
+## Customization
 
-If you don’t have `memory/referenced-repos.json` yet, copy from the example:  
-`cp memory/referenced-repos.example.json memory/referenced-repos.json`  
-(or the agent will create it when you register your first repo).
+### Add your own skills
 
-### 2. Run skills by repo name
+Create a new `.md` file in `skills/` with this format:
 
-Say what you want and **include the repo name**:
+```markdown
+---
+name: my-skill
+description: What it does and when to trigger it.
+---
 
-| You say | Skill used |
-|--------|------------|
-| “Commit and push **MyProject**” | commit-push (in that repo’s path) |
-| “Start React for **MyProject**” | start-react (in that repo’s path) |
-| “Start Docker Compose for **MyProject**” | start-docker-compose (in that repo’s path) |
-| “Deploy **MyProject**” | firebase-build-deploy (in that repo’s path) |
+# My skill
 
-Registered repos and their paths are in **`memory/referenced-repos.json`** (gitignored).
+## Trigger phrases
+- "do the thing"
 
-## Project memory: `memory/project/`
-
-Octopus can keep **project-specific notes** (generated once, reused later) under:
-
-- `memory/project/<ProjectName>/summary.md`
-
-### How it’s used
-
-- **First time** you “use octopus with <ProjectName>” (or you run “map project <ProjectName>”):
-  - Octopus scans the repo (lightweight: README, package.json, key folders)
-  - Writes a reusable summary to `memory/project/<ProjectName>/summary.md`
-- **Next time**:
-  - Octopus reads the existing summary instead of re-summarizing the repo
-
-### Token-saving defaults
-
-- If you omit a repo name (e.g. “start react”), Octopus will default to the **last active repo** from `memory/last-working-repos.json`.
-- Skills will avoid “extra” actions (like opening apps) unless you asked.
-
-### Git / privacy
-
-- `memory/project/**` is **gitignored** (except `memory/project/.gitkeep`) so per-project summaries stay **local** and aren’t committed.
-- `memory/project/.gitkeep` is kept so the folder exists in the repo.
-
-## Optional: control response length
-
-You can store your preference in `memory/assistant-preferences.json` (gitignored is optional; it’s safe to commit if it contains no secrets).
-
-- **Short responses**: set `"verbosity": "short"`
-- **Normal**: set `"verbosity": "normal"`
-- **Detailed**: set `"verbosity": "detailed"`
-
-To make the agent apply it, include it in your prompt, e.g.:
-
-- “Follow `memory/assistant-preferences.json`. Start React for MyProject.”
-
-## Optional: remember last active repo
-
-If you want Octopus to default to the repo you worked on last (when you don’t specify a repo name), use:
-
-- `memory/last-working-repos.json` (local; gitignored)
-- `memory/last-working-repos.example.json` (template)
-
-## Alternative: copy or symlink skills into a project
-
-If you prefer to open Cursor in each project and have skills there, copy or symlink the skill folders into that project’s `.cursor/skills/` directory.
-
-### Copy
-
-From your project root (replace with your path to Octopus):
-
-```bash
-mkdir -p .cursor/skills
-cp -r /path/to/Octopus/skills/commit-push .cursor/skills/
-cp -r /path/to/Octopus/skills/start-react .cursor/skills/
-cp -r /path/to/Octopus/skills/start-docker-compose .cursor/skills/
-cp -r /path/to/Octopus/skills/firebase-build-deploy .cursor/skills/
+## Steps
+1. Step one
+2. Step two
 ```
 
-### Symlink (updates in Octopus apply everywhere)
+Both Cursor and Claude Code will pick it up.
 
-```bash
-mkdir -p .cursor/skills
-ln -s /path/to/Octopus/skills/commit-push .cursor/skills/commit-push
-ln -s /path/to/Octopus/skills/start-react .cursor/skills/start-react
-ln -s /path/to/Octopus/skills/start-docker-compose .cursor/skills/start-docker-compose
-ln -s /path/to/Octopus/skills/firebase-build-deploy .cursor/skills/firebase-build-deploy
+### Preferences
+
+Edit `local/preferences.json`:
+
+```json
+{
+  "verbosity": "short",    // tiny | short | normal | detailed
+  "preferBullets": true
+}
 ```
 
-With copy/symlink, you run skills in the **current** workspace (that project). The “target repo” step in each skill (and `memory/referenced-repos.json`) is only used when you work from the Octopus repo and pass a repo name.
+## Privacy
 
-## Customizing
+Everything in `local/` is gitignored:
+- Your project paths stay on your machine
+- Cached summaries stay on your machine
+- No secrets or personal data are ever committed
 
-- **start-react**: The skill can open the repo in the browser; use the URL from `git remote -v` in the target repo or edit the skill to point to your GitHub URL.
-- **firebase-build-deploy**: Assumes a React app with `build/` and Firebase Hosting; adjust if your project differs.
+The committed files (skills, rules, examples, README) contain no personal information and are safe to share publicly.

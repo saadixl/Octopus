@@ -1,0 +1,30 @@
+---
+description: Core Octopus rules — read local state, resolve target project, reuse cached summaries, stay concise
+alwaysApply: true
+---
+
+# Octopus core rules
+
+## On every request
+
+1. Read `local/repos.json` if it exists — it maps project names to absolute paths.
+2. Read `local/preferences.json` if it exists — it controls response verbosity/style.
+3. When a skill needs a "target project":
+   - If the user named one, look it up in `local/repos.json`.
+   - Otherwise use `lastActive` from `local/repos.json`.
+   - Only ask if neither is available.
+
+## Reuse cached project knowledge
+
+Before exploring a project, check `local/maps/<ProjectName>.md`.
+- If it exists, read it and use it as context.
+- Only regenerate if the user explicitly asks to refresh.
+
+## Response style
+
+- Keep responses **short** unless the user asks for detail.
+- Prefer bullets. Avoid repeating plans or restating file contents.
+
+## After working in a project
+
+Update `lastActive` in `local/repos.json` to the project you just worked in.

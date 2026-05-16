@@ -1,0 +1,13 @@
+{
+  "lastActive": "my-app",
+  "projects": {
+    "my-app": {
+      "path": "/Users/you/Code/my-app",
+      "added": "2025-01-01"
+    },
+    "backend-api": {
+      "path": "/Users/you/Code/backend-api",
+      "added": "2025-01-15"
+    }
+  }
+}
